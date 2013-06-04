@@ -4,6 +4,8 @@
   <%= display_base_errors resource %>
   <%= f.input :name, :autofocus => true %>
   <%= f.input :email, :required => true %>
+  <%= f.input :dob, start_year: Date.today.year - 80, end_year: Date.today.year - 3 %>
+  <%= f.input :gender %>
   <%= f.input :password, :required => true %>
   <%= f.input :password_confirmation, :required => true %>
   <%= f.button :submit, 'Sign up', :class => 'btn-primary' %>
