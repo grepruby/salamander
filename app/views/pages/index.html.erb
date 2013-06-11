@@ -5,12 +5,13 @@
     <th>Name</th>
     <th></th>
     <th></th>
+    <th></th>
   </tr>
 
 <% @pages.each do |page| %>
   <tr>
     <td><%= page.name %></td>
-    <!--td><%#= link_to 'Show', page %></td!-->
+    <td><%= link_to 'Show', project_page_path(@project, page), :class => "button" %></td>
     <td><%= link_to 'Edit', edit_project_page_path(@project, page), :class => "button" %></td>
     <td><%= link_to 'Destroy', project_page_path(@project, page), method: :delete, data: { confirm: 'Are you sure?' } , :class => "button" %></td>
   </tr>

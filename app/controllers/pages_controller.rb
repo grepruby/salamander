@@ -1,4 +1,5 @@
 class PagesController < ApplicationController
+  layout false, :only => :show
   # GET /pages
   # GET /pages.json
   def index
