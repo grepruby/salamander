@@ -3,5 +3,6 @@ class Project < ActiveRecord::Base
   attr_accessible :name
 
   delegate :username, to: :user
+  has_many :pages, :dependent => :destroy
 
 end

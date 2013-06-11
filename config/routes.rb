@@ -1,9 +1,8 @@
 Rails3BootstrapDeviseCancan::Application.routes.draw do
-  resources :pages
 
-
-  resources :projects
-
+  resources :projects do
+    resources :pages
+  end
 
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 

@@ -1,9 +1,11 @@
 <h1>Listing projects</h1>
 
-<table>
+<table id="box">
   <tr>
     <th>Name</th>
     <th>User</th>
+    <th></th>
+    <th></th>
     <th></th>
     <th></th>
     <th></th>
@@ -13,9 +15,11 @@
   <tr>
     <td><%= project.name %></td>
     <td><%= project.username %></td>
-    <td><%= link_to 'Show', project %></td>
-    <td><%= link_to 'Edit', edit_project_path(project) %></td>
-    <td><%= link_to 'Destroy', project, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    <td><%= link_to 'AddPage', new_project_page_path(project), :class => "button" %></td>
+    <td><%= link_to 'PageList', project_pages_path(project), :class => "button" %></td>
+    <td><%= link_to 'Show', project, :class => "button" %></td>
+    <td><%= link_to 'Edit', edit_project_path(project), :class => "button" %></td>
+    <td><%= link_to 'Destroy', project, method: :delete, data: { confirm: 'Are you sure?' }, :class => "button" %></td>
   </tr>
 <% end %>
 </table>
