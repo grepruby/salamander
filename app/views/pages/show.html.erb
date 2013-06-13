@@ -9,6 +9,7 @@
 <link rel="stylesheet" type="text/css" href="/css/jquery-ui.css"/>
 <link href="/css/jquery.mCustomScrollbar.css" rel="stylesheet" />	
 <script type="text/javascript" src="/js/script.js"></script>
+<%= csrf_meta_tags %>
 </head>
 <body>
 	<div class="wrapper">
@@ -190,12 +191,14 @@
 	        	</div><br class="spacer">
 	    		</div>
 				</div>
+				<button onclick="savedata();">save</button>
+				<button id="save" style="display:none;">ok</button>
 				<footer>
 					<p>Copyright &copy; 2012-2013 Salamander. All Rights Reserved</p>
 				</footer>
   		</div>
 <script src="/js/jquery.mCustomScrollbar.concat.min.js"></script>
-<script>
+<script type="text/javascript">
 (function($){
 	$(window).load(function(){
 		$("#content_1").mCustomScrollbar();
@@ -203,6 +206,25 @@
 		
 	});
 })(jQuery);
+function savedata(){
+	$("#save").click();
+	if(dataTosave[0].panel.length > 0){
+    for( i = 0 ; i < dataTosave[0].panel.length; i++){
+      delete dataTosave[0].panel[i].parent;
+      $.ajax({
+        type: "POST",
+        beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+        url: "<%= create_element_path(@project, @page) %>",
+        dataType: 'json',
+        data: { type: "panel", pop: dataTosave[0].panel[i]}
+      }).error(function(XMLHttpRequest, textStatus, errorThrown) { 
+        alert( "error" );
+      }).success(function(response) { 
+        alert( "Data Saved: " + response );
+      });
+    }
+  }
+};
 </script>
 </body>
 </html>

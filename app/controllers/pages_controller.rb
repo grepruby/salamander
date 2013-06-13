@@ -1,9 +1,10 @@
 class PagesController < ApplicationController
+  before_filter :authenticate_user!
   layout false, :only => :show
   # GET /pages
   # GET /pages.json
   def index
-    @project = Project.find(params[:project_id])
+    @project = current_user.projects.find(params[:project_id])
     @pages = @project.pages
 
     respond_to do |format|
@@ -14,7 +15,7 @@ class PagesController < ApplicationController
   # GET /pages/1
   # GET /pages/1.json
   def show
-    @project = Project.find(params[:project_id])
+    @project = current_user.projects.find(params[:project_id])
     @page = @project.pages.find(params[:id])
 
     respond_to do |format|
@@ -25,7 +26,7 @@ class PagesController < ApplicationController
   # GET /pages/new
   # GET /pages/new.json
   def new
-    @project = Project.find(params[:project_id])
+    @project = current_user.projects.find(params[:project_id])
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @page }
@@ -34,14 +35,14 @@ class PagesController < ApplicationController
 
   # GET /pages/1/edit
   def edit
-    @project = Project.find(params[:project_id])
+    @project = current_user.projects.find(params[:project_id])
     @page = Page.find(params[:id])
   end
 
   # POST /pages
   # POST /pages.json
   def create
-    @project = Project.find(params[:project_id])
+    @project = current_user.projects.find(params[:project_id])
     @page = @project.pages.new(params[:page])
 
     respond_to do |format|

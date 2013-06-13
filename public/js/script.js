@@ -1,3 +1,4 @@
+var dataTosave = [];
 $(window).load(function(e) {
 	$(".propblock").css({"display":"none"});
 	$.getScript('/js/elements.js', function() //getting objects script
@@ -1729,6 +1730,7 @@ $(window).load(function(e) {
 								"bgColor"		: hexColor($("#drop"+i).css("background-color"))
 							});
 						 }
+						 dataTosave[0] = panelData 
 						 for(i=1;i<=textCounter;i++)
 						 {
 							 
@@ -1755,6 +1757,7 @@ $(window).load(function(e) {
 								"bgColor"		: hexColor($("#text"+i).css("background-color"))
 							});
 						 }
+						 dataTosave[1] = textboxData
 						/***** Setting Json Data ends****/
 						$("#droparea .panelwrapper,#droparea .textwrapper").remove();
 					}

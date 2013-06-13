@@ -1,8 +1,14 @@
 Rails3BootstrapDeviseCancan::Application.routes.draw do
 
   resources :projects do
-    resources :pages
+    resources :pages do
+      resources :elements do
+        resources :properties
+      end
+    end
   end
+
+  post 'projects/:project_id/pages/:page_id/create_element' => "elements#create_element", :as => :create_element
 
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 
