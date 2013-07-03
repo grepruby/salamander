@@ -1,11 +1,93 @@
-var dataTosave = [];
+var panelCounter=0,textCounter=0;
+
+/***** Saving *****/
+	var panelData = {
+								panel: []
+						};
+					var textboxData = {
+								textbox: []
+						};
+					function svaing()
+					{
+						$(".panelpoup").hide();
+						$(".textpoup").hide();
+						/***** Setting Json Data starts****/
+						
+						panelData.panel=[];
+						textboxData.textbox=[];
+						
+						for(i=1;i<=panelCounter;i++)
+						 {
+								 
+							panelData.panel.push({ 
+								"dragid"			: "drag"+i,
+								"dropid"			: "drop"+i, 
+								"contentid"			: "ptext"+i, 
+								"name"			: $("#drag"+i).attr("data-name"),
+								"x"				: $("#drag"+i).position().left,
+								"y"				: $("#drag"+i).position().top,
+								"width"			: $("#drag"+i).outerWidth(true),
+								"height"		: $("#drag"+i).outerHeight(true),
+								"text"			: $("#ptext"+i).text(),
+								"borderColor"	: $("#drop"+i).css("outline-color") ,
+								"zindex"		: $("#drag"+i).css("z-index"),
+								"parent"		: $("#drag"+i).parent()
+								//"borderRadius"	:	,
+								//"bgColor"		: hexColor($("#drop"+i).css("background-color"))
+							});
+							
+						 }
+						 for(i=1;i<=textCounter;i++)
+						 {
+							 
+							textboxData.textbox.push({ 
+								"dragid"			: "tdrag"+i,
+								"dropid"			: "text"+i, 
+								"contentid"			: "txt"+i, 
+								"name"			: $("#tdrag"+i).attr("data-name"),
+								"x"				: $("#tdrag"+i).position().left,
+								"y"				: $("#tdrag"+i).position().top,
+								"width"			: $("#tdrag"+i).outerWidth(true),
+								"height"		: $("#tdrag"+i).outerHeight(true),
+								"text"			: $("#txt"+i).text(),
+								"borderColor"	: $("#text"+i).css("outline-color") ,
+								"zindex"		: $("#tdrag"+i).css("z-index"),
+								"parent"		: $("#tdrag"+i).parent(),
+								"font"			: $("#txt"+i).css("font-family"),
+								"size"			: $("#txt"+i).css("font-size"),
+								"fonts"			: $("#txt"+i).css("font-style"),
+								"fontw"			: $("#txt"+i).css("font-weight"),
+								//"color"			: hexColor($("#txt"+i).css("color")),
+								"align"			: $("#txt"+i).css("text-align")
+								//"borderRadius"	:	,
+								//"bgColor"		: hexColor($("#text"+i).css("background-color"))
+							});
+						 }
+						
+						/***** Setting Json Data ends****/
+						//$("#droparea .panelwrapper,#droparea .textwrapper").remove();
+					}
+					function loading(id) 
+					{
+						var dispObj=$("#"+id);
+						//dispObj.append('<tr><td>'+panelData.panel[0].dragid+'<td>'+panelData.panel[0].dropid+"<td>"+panelData.panel[0].contentid+'<td>'+panelData.panel[0].name);
+						for(i=0;i<panelData.panel.length;i++)
+						{
+							dispObj.append('<tr><td>'+panelData.panel[i].name+'<td>'+panelData.panel[i].x+"<td>"+panelData.panel[i].y+'<td>'+panelData.panel[i].width+'<td>'+panelData.panel[i].height+'<td>'+panelData.panel[i].text+'<td>'+panelData.panel[i].zindex);
+						}
+						for(i=0;i<textboxData.textbox.length;i++)
+						{
+							dispObj.append('<tr><td>'+textboxData.textbox[i].name+'<td>'+textboxData.textbox[i].x+"<td>"+textboxData.textbox[i].y+'<td>'+textboxData.textbox[i].width+'<td>'+textboxData.textbox[i].height+'<td>'+textboxData.textbox[i].text+'<td>'+textboxData.textbox[i].zindex);
+						}
+							
+						
+					}
+			
+
 $(window).load(function(e) {
 	$(".propblock").css({"display":"none"});
-	$.getScript('/js/elements.js', function() //getting objects script
-	{
-    
-		/*****Global Variable Declaration for Panel *****/
-			var panelDrag=false,panelCounter=0,panelActive,superPanel=false,panelXNeg,panelYNeg;
+	/*****Global Variable Declaration for Panel *****/
+			var panelDrag=false,panelActive,superPanel=false,panelXNeg,panelYNeg;
 			var editAreaWidth=$(".editorarea").outerWidth(true);
 			var editAreaHeight=$(".editorarea").outerHeight(true);
 			var panelPopupWidth=$(".panelpoup").outerWidth(true);
@@ -13,9 +95,9 @@ $(window).load(function(e) {
 			
 			var textPopupWidth=$(".textpoup").outerWidth(true);
 			var textPopupHeight=$(".textpoup").outerHeight(true);
-			
-		/*****Global Variable Declaration for Textbox *****/
-			var textActive,textXNeg,textYNeg,textCounter=0,textDrag=false,superText=false;
+			var lastDrag=null;
+	/*****Global Variable Declaration for Textbox *****/
+		var textActive,textXNeg,textYNeg,textDrag=false,superText=false;
 			
 		/*****Common Variable*****/
 			var dropId,activeElement;
@@ -23,8 +105,7 @@ $(window).load(function(e) {
 			var datr=$("#droparea").offset().top;
 			var tempId;
 			var lp,tp,zcounter=0;
-		
-		/* Defination for dragitem process starts */
+	/* Defination for dragitem process starts */
 				function dragProcess(dragthis,ui)
 				{
 					
@@ -264,32 +345,8 @@ $(window).load(function(e) {
 						dragthis.animate({"left":0,"top":0});
 					}
 				}
-		/* Defination for dragitem process ends */
-		
-		/*****Panel Drag Event Implementing strats here *****/
-				$( "#divpanel").draggable({
-						revert: "invalid",
-						drag:function(event,ui)
-						{
-							panelXNeg=$(this).offset().left-dar;
-							panelYNeg=$(this).offset().top-datr;
-													
-						},
-						start: function(event,ui)
-						{
-							panelDrag=true;
-							activeElement="panel";
-							$(".content").css({"display":"none"});
-							$(".panelhide").css({"display":"none"});
-							$(".pst").css({"display":"block"});
-						},
-						stop: function(event, ui)
-						{
-							dragProcess($(this), ui);
-						}
-				});
-		/*****Panel Drag Event Implementing ends here *****/
-		
+	/* Defination for dragitem process ends */
+	
 			/* Defination for Drop Process starts */
 				function dropProcess(dropthis,ui)
 				{
@@ -336,6 +393,35 @@ $(window).load(function(e) {
 									$("#ypos").val(tp);
 									$("#width").val($(this).outerWidth(true));
 									$("#height").val($(this).outerHeight(true));
+ 									/*
+									if(lp+10+$(this).outerWidth(true)+panelPopupWidth>editAreaWidth)
+									{
+											var lpos=lp+10+$(this).outerWidth(true)+panelPopupWidth-editAreaWidth;
+											if(tp-panelPopupHeight>=1)
+											{
+												$(".panelpoup").css({"left":(lp+10+$(this).outerWidth(true)-lpos),"top":tp-panelPopupHeight});
+											}
+											else if(tp+panelPopupHeight+$(this).outerHeight(true)<=484) 
+											{
+												$(".panelpoup").css({"left":(lp+10+$(this).outerWidth(true)-lpos),"top":tp+$(this).outerHeight(true)});
+											}
+											else
+											{
+												$(".panelpoup").css({"left":(lp+10+$(this).outerWidth(true)-lpos),"top":tp+20});
+											}
+									}
+									else
+									{*/
+									if($(this).parent().attr("id")!="droparea")
+										{
+											lp=parseInt($("#xpos").val())+$(this).parent().parent().position().left;
+											tp=parseInt($("#ypos").val())+$(this).parent().parent().position().top;
+										}
+										$(".panelpoup").css({"left":lp+10+$(this).outerWidth(true),"top":tp-10});
+									//}
+									if(lastDrag && lastDrag!=$(this).attr('id'))
+										$(".panelpoup").hide();
+								
 									
 								},
 								start: function( event, ui )
@@ -350,8 +436,38 @@ $(window).load(function(e) {
 									$(this).children('div.drpanel').addClass('addborder');
 								},
 								stop: function(event, ui)
-								{				
+								{	
+									var lp=$(this).position().left;
+									var tp=$(this).position().top;				
 										dragElementProcess($(this), ui);
+									if(lp+10+$(this).outerWidth(true)+panelPopupWidth>editAreaWidth)
+									{
+											var lpos=lp+10+$(this).outerWidth(true)+panelPopupWidth-editAreaWidth;
+											if(tp-panelPopupHeight>=1)
+											{
+												$(".panelpoup").css({"left":(lp+10+$(this).outerWidth(true)-lpos),"top":tp-panelPopupHeight});
+											}
+											else if(tp+panelPopupHeight+$(this).outerHeight(true)<=484) 
+											{
+												$(".panelpoup").css({"left":(lp+10+$(this).outerWidth(true)-lpos),"top":tp+$(this).outerHeight(true)});
+											}
+											else
+											{
+												$(".panelpoup").css({"left":(lp+10+$(this).outerWidth(true)-lpos),"top":tp+20});
+											}
+									}
+									else
+									{
+										//alert($(this).parent().attr("id"));
+										if($(this).parent().attr("id")!="droparea")
+										{
+											lp=parseInt($("#xpos").val())+$(this).parent().parent().position().left;
+											tp=parseInt($("#ypos").val())+$(this).parent().parent().position().top;
+										}
+										
+										$(".panelpoup").css({"left":lp+10+$(this).outerWidth(true),"top":tp-10});
+									}
+									lastDrag=$(this).attr('id');
         						}
 							}); 
 							
@@ -407,6 +523,7 @@ $(window).load(function(e) {
 										{
 											$(this).resizable( "option", "maxHeight", $(this).outerHeight(true));
 										}
+										$(".panelpoup").css({"left":lp+$(this).position().left+10+$(this).outerWidth(true),"top":tp-10});
 									
 								} ,
        							stop: function(e, ui) {
@@ -472,6 +589,27 @@ $(window).load(function(e) {
 										$("#ypos").val(tp);
 										$("#height").val($(this).outerHeight(true));
 									}
+									lp=parseInt($("#xpos").val());
+									if(lp+10+$(this).outerWidth(true)+panelPopupWidth>editAreaWidth)
+									{
+											var lpos=lp+10+$(this).outerWidth(true)+panelPopupWidth-editAreaWidth;
+											if(tp-panelPopupHeight>=1)
+											{
+												$(".panelpoup").css({"left":(lp+10+$(this).outerWidth(true)-lpos),"top":tp-panelPopupHeight});
+											}
+											else if(tp+panelPopupHeight+$(this).outerHeight(true)<=484) 
+											{
+												$(".panelpoup").css({"left":(lp+10+$(this).outerWidth(true)-lpos),"top":tp+$(this).outerHeight(true)});
+											}
+											else
+											{
+												$(".panelpoup").css({"left":(lp+10+$(this).outerWidth(true)-lpos),"top":tp+20});
+											}
+									}
+									else
+									{
+										$(".panelpoup").css({"left":parseInt($("#xpos").val())+10+parseInt($("#width").val()),"top":tp-10});
+									}
 									
 									$(this).css({"left":0,"top":0});
 									$(this).resizable( "option", "maxWidth",700);
@@ -536,6 +674,7 @@ $(window).load(function(e) {
 										$("#width").val($(this).outerWidth(true));
 										$("#height").val($(this).outerHeight(true));
 										$("#text").val($("#txt"+$(this).attr('id').split('tdrag')[1]).text());
+										$(".textpoup").css({"left":lp+10+$(this).outerWidth(true),"top":(tp-textPopupHeight/2)});
 									},
 									start: function( event, ui )
 									{
@@ -557,6 +696,28 @@ $(window).load(function(e) {
 									{	
 											superText=false;
 											dragElementProcess($(this),ui);
+											var lp=$(this).offset().left-dar;
+											var tp=$(this).offset().top-datr;
+											if(lp+10+$(this).outerWidth()+textPopupWidth>editAreaWidth) 
+											{
+													var lpos=lp+10+$(this).outerWidth()+textPopupWidth-editAreaWidth;
+													if(tp-textPopupHeight>=1)
+													{
+														$(".textpoup").css({"left":(lp+10+$(this).outerWidth()-lpos),"top":tp-panelPopupHeight});
+													}
+													else if(tp+textPopupHeight+$(this).outerHeight(true)<=484)
+													{
+														$(".textpoup").css({"left":(lp+10+$(this).outerHeight(true)-lpos),"top":tp+$(this).outerHeight(true)});
+													}
+													else
+													{
+														$(".textpoup").css({"left":(lp+10+$(this).outerHeight(true)-lpos),"top":tp+20});
+													}
+											}
+											else
+											{
+												$(".textpoup").css({"left":lp+10+$(this).outerWidth(true),"top":(tp-textPopupHeight/2)});	
+											}
 									}
 							}); 
 							/**resize**/
@@ -601,11 +762,12 @@ $(window).load(function(e) {
 										{
 											$(this).resizable( "option", "maxHeight", $(this).outerHeight(true));
 										}
-									 	
-									$("#xpos").val(lp);
-									$("#ypos").val(tp);
+										 
+									$("#xpos").val(lp+$(this).position().left);
+									$("#ypos").val(tp+$(this).position().top);
 									$("#width").val($(this).outerWidth(true));
 									$("#height").val($(this).outerHeight(true));
+									$(".textpoup").css({"left":lp+$(this).position().left+10+$(this).outerWidth(true),"top":(tp-textPopupHeight/2)});
 									
 								},
        							stop: function(e, ui) {
@@ -664,6 +826,7 @@ $(window).load(function(e) {
 										}
 										
 										$(this).parent().css({"top":tp});
+										
 										$("#xpos").val(lp);
 										$("#width").val($(this).outerWidth(true));
 										$("#ypos").val(tp);
@@ -672,6 +835,28 @@ $(window).load(function(e) {
 									$(this).css({"left":0,"top":0});
 									$(this).resizable( "option", "maxWidth",700);
 									$(this).resizable( "option", "maxHeight",700);
+									lp=parseInt($("#xpos").val());		
+									
+											if(lp+10+$(this).outerWidth()+textPopupWidth>editAreaWidth) 
+											{
+													var lpos=lp+10+$(this).outerWidth()+textPopupWidth-editAreaWidth;
+													if(tp-textPopupHeight>=1)
+													{
+														$(".textpoup").css({"left":(lp+10+$(this).outerWidth()-lpos),"top":tp-panelPopupHeight});
+													}
+													else if(tp+textPopupHeight+$(this).outerHeight(true)<=484)
+													{
+														$(".textpoup").css({"left":(lp+10+$(this).outerHeight(true)-lpos),"top":tp+$(this).outerHeight(true)});
+													}
+													else
+													{
+														$(".textpoup").css({"left":(lp+10+$(this).outerHeight(true)-lpos),"top":tp+20});
+													}
+											}
+											else
+											{
+												$(".textpoup").css({"left":parseInt($("#xpos").val())+10+parseInt($("#width").val()),"top":(tp-textPopupHeight/2)}); 	
+											}
         						} 
 															
 						   });
@@ -817,33 +1002,9 @@ $(window).load(function(e) {
 				
 				}
 		/* Defination for Drop Process Ends */
-		
-		/*****Textbox Drag Event Implementing strats here *****/
-			$( "#textpanel").draggable({
-					revert: "invalid",
-					drag:function()
-					{
-						panelXNeg=$(this).offset().left-dar;
-						panelYNeg=$(this).offset().top-datr;
-					},
-					start: function(event,ui)
-					{
-						textDrag=true;
-						activeElement="text";
-						$(".content").css({"display":"block"});
-						$(".panelhide").css({"display":"block"});
-						$(".pst").css({"display":"none"});
-						
-					},
-					stop: function(event, ui)
-					{
-						textDragProcess($(this), ui);
-        			}
-			});
-			
-			function textDragProcess(dragthis,ui)
-			{
-				if(panelXNeg>0 && panelXNeg<=498 && panelYNeg>0 && panelYNeg<=467)
+				function textDragProcess(dragthis,ui)
+				{
+					if(panelXNeg>0 && panelXNeg<=498 && panelYNeg>0 && panelYNeg<=467)
 				{
 						if(textDrag && dropId=='droparea')
 						{
@@ -1014,11 +1175,10 @@ $(window).load(function(e) {
 							}
 						} 
 				}
-			}
-			
-			function textClick(curObj)
-			{
-				$(".content").css({"display":"block"});
+				}
+				function textClick(curObj)
+				{
+					$(".content").css({"display":"block"});
 				$(".panelhide").css({"display":"block"});
 				$(".pst").css({"display":"none"});
 				textActive=curObj;
@@ -1059,7 +1219,207 @@ $(window).load(function(e) {
 					} 
 					var hexString =parts.join('').toUpperCase();
 					$('#bgcolor option[value="' + hexString + '"]').attr("selected", "selected");
+				}
+				/***** clcik method implementation *****/
+			function showPopu(curObj)
+			{
+				lastDrag=curObj.attr("id");
+				//var tlp=curObj.position();.left;
+				//var ttp=curObj.offset().top;
+				$(".textpoup").hide();
+				var tlp=$("#"+curObj.attr('id')).position().left;
+				var ttp=$("#"+curObj.attr('id')).position().top;
+				var tW=curObj.width();
+				$("#idname").val(curObj.attr('data-name'));
+				$("#icont").val(curObj.children('div.drpanel').children('p').text());
+				if(curObj.parent().attr("id")!="droparea")
+				{
+					tlp=parseInt($("#xpos").val())+curObj.parent().parent().position().left;
+					ttp=parseInt($("#ypos").val())+curObj.parent().parent().position().top;
+				}
+				if(tlp+10+tW+panelPopupWidth>editAreaWidth)
+				{
+					var lpos=tlp+10+tW+panelPopupWidth-editAreaWidth;
+					if(ttp-panelPopupHeight>=1)
+					{
+						$(".panelpoup").css({"display":"block","left":(tlp+10+tW-lpos),"top":ttp-panelPopupHeight});
+					}
+					else if(ttp+panelPopupHeight+curObj.outerHeight(true)<=484)
+					{
+						$(".panelpoup").css({"display":"block","left":(tlp+10+tW-lpos),"top":ttp+curObj.outerHeight(true)});
+					}
+					else
+					{
+						$(".panelpoup").css({"display":"block","left":(tlp+10+tW-lpos),"top":ttp+20});
+					}
+				}
+				else
+				{
+					$(".panelpoup").css({"display":"block","left":tlp+10+tW,"top":ttp-10});	
+				}
 			}
+			
+			function textShowPop(curObj)
+			{
+				$(".panelpoup").hide(); 
+				var str=curObj.attr('id');
+				var indx=str.split('tdrag')[1];
+				//var tlp=curObj.offset().left;
+				//var ttp=curObj.offset().top;
+				var tlp=$("#"+str).position().left;
+				var ttp=$("#"+str).position().top;
+				var tW=curObj.width();
+				var h=$(".textpoup").height();
+				$("#tidname").val(curObj.attr('data-name'));
+				$("#ticont").val($("#txt"+indx).text());
+				
+				if(tlp+10+tW+textPopupWidth>editAreaWidth)
+				{
+					var lpos=tlp+10+tW+textPopupWidth-editAreaWidth;
+					if(ttp-textPopupHeight>=1)
+					{
+						$(".textpoup").css({"display":"block","left":(tlp+10+tW-lpos),"top":ttp-panelPopupHeight});
+					}
+					else if(ttp+textPopupHeight+curObj.outerHeight(true)<=484)
+					{
+						$(".textpoup").css({"display":"block","left":(tlp+10+tW-lpos),"top":ttp+curObj.outerHeight(true)});
+					}
+					else
+					{
+						$(".textpoup").css({"display":"block","left":(tlp+10+tW-lpos),"top":ttp+20});
+					}
+				}
+				else
+				{
+					$(".textpoup").css({"display":"block","left":tlp+10+tW,"top":(ttp-h/2)});	
+				}
+				//$(".textpoup").css({"display":"block","left":tlp+10+tW,"top":(ttp-h/2)});	
+			}
+			st=0;
+			function panelClick(curObj)
+			{
+				var npId=curObj.attr('id');
+				var indx=npId.split('drag')[1];
+				st=1;
+				panelActive=curObj;
+				activeElement="panel";
+				$(".content").css({"display":"none"});
+				$(".panelhide").css({"display":"none"});
+				$(".pst").css({"display":"block"});
+				$("#droparea").find("div.addborder").removeClass("addborder");
+				curObj.children("div.drpanel").addClass("addborder");
+				var lp=curObj.position().left;
+				var tp=curObj.position().top;
+				
+				/***** setting properties values *****/
+					
+					$("#name").val(curObj.attr('data-name'));
+					$("#xpos").val(lp);
+					$("#ypos").val(tp);
+					$("#width").val(curObj.outerWidth(true));
+					$("#height").val(curObj.outerHeight(true));
+					$("#text").val($("#ptext"+indx).text()); 
+					var rgbString = curObj.css("background-color"); 
+					var parts = rgbString.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+					delete (parts[0]);
+					for (var i = 1; i <= 3; ++i) {
+   							 parts[i] = parseInt(parts[i]).toString(16);
+
+
+   							 if (parts[i].length == 1) parts[i] = '0' + parts[i];
+					} 
+					var hexString =parts.join('').toUpperCase();
+					$('#bgcolor option[value="' + hexString + '"]').attr("selected", "selected");
+			}
+			
+			pclick=0;
+			/***** Reset properties & style *****/
+			function resetting()
+			{
+					$("#name").val("");
+					$("#xpos").val("");
+					$("#ypos").val("");
+					$("#width").val("");
+					$("#height").val("");
+					$("#text").val("");
+			}
+			Array.max = function(array) {
+   					 return Math.max.apply(Math, array);
+			};
+
+			Array.min = function(array) {
+    				return Math.min.apply(Math, array);
+				};
+				function hexColor(rgbString)
+				{
+							//var rgbString = $("#drop"+panelCounter).css("background-color"); 
+							var parts = rgbString.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+							delete (parts[0]);
+							for (var i = 1; i <= 3; ++i) {
+								 parts[i] = parseInt(parts[i]).toString(16);
+								 if (parts[i].length == 1) parts[i] = '0' + parts[i];
+							} 
+							var hexString =parts.join('').toUpperCase();
+							return hexString;
+				}
+				
+			
+	$.getScript('/js/elements.js', function() //getting objects script
+	{
+    
+		/*****Panel Drag Event Implementing strats here *****/
+				
+				$("#divpanel").draggable({
+						revert: "invalid",
+						drag:function(event,ui)
+						{
+							
+							panelXNeg=$(this).offset().left-dar;
+							panelYNeg=$(this).offset().top-datr;
+													
+						},
+						start: function(event,ui)
+						{
+							panelDrag=true;
+							activeElement="panel";
+							$(".content").css({"display":"none"});
+							$(".panelhide").css({"display":"none"});
+							$(".pst").css({"display":"block"});
+						},
+						stop: function(event, ui)
+						{
+							dragProcess($(this), ui);
+						}
+				});
+		/*****Panel Drag Event Implementing ends here *****/
+		
+		
+		/*****Textbox Drag Event Implementing strats here *****/
+			$( "#textpanel").draggable({
+					revert: "invalid",
+					drag:function()
+					{
+						panelXNeg=$(this).offset().left-dar;
+						panelYNeg=$(this).offset().top-datr;
+					},
+					start: function(event,ui)
+					{
+						textDrag=true;
+						activeElement="text";
+						$(".content").css({"display":"block"});
+						$(".panelhide").css({"display":"block"});
+						$(".pst").css({"display":"none"});
+						
+					},
+					stop: function(event, ui)
+					{
+						textDragProcess($(this), ui);
+        			}
+			});
+			
+			
+			
+			
 		/*****Textbox Drag Event Implementing ends here *****/
 		
 		/*****Dropable Area Event Implementing strats here *****/
@@ -1225,112 +1585,7 @@ $(window).load(function(e) {
 		});
 		
 		
-		/***** clcik method implementation *****/
-			function showPopu(curObj)
-			{
-				
-				//var tlp=curObj.position();.left;
-				//var ttp=curObj.offset().top;
-				$(".textpoup").hide();
-				var tlp=$("#"+curObj.attr('id')).position().left;
-				var ttp=$("#"+curObj.attr('id')).position().top;
-				var tW=curObj.width();
-				$("#idname").val(curObj.attr('data-name'));
-				$("#icont").val(curObj.children('div.drpanel').children('p').text());
-				if(tlp+10+tW+panelPopupWidth>editAreaWidth)
-				{
-					var lpos=tlp+10+tW+panelPopupWidth-editAreaWidth;
-					if(ttp-panelPopupHeight>=1)
-					{
-						$(".panelpoup").css({"display":"block","left":(tlp+10+tW-lpos),"top":ttp-panelPopupHeight});
-					}
-					else if(ttp+panelPopupHeight+curObj.outerHeight(true)<=484)
-					{
-						$(".panelpoup").css({"display":"block","left":(tlp+10+tW-lpos),"top":ttp+curObj.outerHeight(true)});
-					}
-					else
-					{
-						$(".panelpoup").css({"display":"block","left":(tlp+10+tW-lpos),"top":ttp+20});
-					}
-				}
-				else
-				{
-					$(".panelpoup").css({"display":"block","left":tlp+10+tW,"top":ttp-10});	
-				}
-			}
-			
-			function textShowPop(curObj)
-			{
-				$(".panelpoup").hide(); 
-				var str=curObj.attr('id');
-				var indx=str.split('tdrag')[1];
-				//var tlp=curObj.offset().left;
-				//var ttp=curObj.offset().top;
-				var tlp=$("#"+str).position().left;
-				var ttp=$("#"+str).position().top;
-				var tW=curObj.width();
-				var h=$(".textpoup").height();
-				$("#tidname").val(curObj.attr('data-name'));
-				$("#ticont").val($("#txt"+indx).text());
-				
-				if(tlp+10+tW+textPopupWidth>editAreaWidth)
-				{
-					var lpos=tlp+10+tW+textPopupWidth-editAreaWidth;
-					if(ttp-textPopupHeight>=1)
-					{
-						$(".textpoup").css({"display":"block","left":(tlp+10+tW-lpos),"top":ttp-panelPopupHeight});
-					}
-					else if(ttp+textPopupHeight+curObj.outerHeight(true)<=484)
-					{
-						$(".textpoup").css({"display":"block","left":(tlp+10+tW-lpos),"top":ttp+curObj.outerHeight(true)});
-					}
-					else
-					{
-						$(".textpoup").css({"display":"block","left":(tlp+10+tW-lpos),"top":ttp+20});
-					}
-				}
-				else
-				{
-					$(".textpoup").css({"display":"block","left":tlp+10+tW,"top":(ttp-h/2)});	
-				}
-				//$(".textpoup").css({"display":"block","left":tlp+10+tW,"top":(ttp-h/2)});	
-			}
-			st=0;
-			function panelClick(curObj)
-			{
-				var npId=curObj.attr('id');
-				var indx=npId.split('drag')[1];
-				st=1;
-				panelActive=curObj;
-				activeElement="panel";
-				$(".content").css({"display":"none"});
-				$(".panelhide").css({"display":"none"});
-				$(".pst").css({"display":"block"});
-				$("#droparea").find("div.addborder").removeClass("addborder");
-				curObj.children("div.drpanel").addClass("addborder");
-				var lp=curObj.position().left;
-				var tp=curObj.position().top;
-				
-				/***** setting properties values *****/
-					
-					$("#name").val(curObj.attr('data-name'));
-					$("#xpos").val(lp);
-					$("#ypos").val(tp);
-					$("#width").val(curObj.outerWidth(true));
-					$("#height").val(curObj.outerHeight(true));
-					$("#text").val($("#ptext"+indx).text()); 
-					var rgbString = curObj.css("background-color"); 
-					var parts = rgbString.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-					delete (parts[0]);
-					for (var i = 1; i <= 3; ++i) {
-   							 parts[i] = parseInt(parts[i]).toString(16);
-   							 if (parts[i].length == 1) parts[i] = '0' + parts[i];
-					} 
-					var hexString =parts.join('').toUpperCase();
-					$('#bgcolor option[value="' + hexString + '"]').attr("selected", "selected");
-			}
-			
-			pclick=0;
+		
 			$("#droparea").bind('click',function(e){
 					e.stopPropagation();
 					/*if(st==0)
@@ -1355,16 +1610,7 @@ $(window).load(function(e) {
 				e.stopPropagation();					   
 				$(".textpoup").css({"display":"block"});						   
 			});
-		/***** Reset properties & style *****/
-			function resetting()
-			{
-					$("#name").val("");
-					$("#xpos").val("");
-					$("#ypos").val("");
-					$("#width").val("");
-					$("#height").val("");
-					$("#text").val("");
-			}
+		
 			resetting();
 				
 		/***** popup id changes *****/
@@ -1617,13 +1863,7 @@ $(window).load(function(e) {
 					}
 			});
 				
-			Array.max = function(array) {
-   					 return Math.max.apply(Math, array);
-			};
-
-			Array.min = function(array) {
-    				return Math.min.apply(Math, array);
-				};
+			
 		/***** Arrow Key Implementation *****/		
 			$("html").keydown(function(event){
 					
@@ -1684,485 +1924,10 @@ $(window).load(function(e) {
 			});
 			
 			/***** Saving & Loading Implementation *****/
-				function hexColor(rgbString)
-				{
-							//var rgbString = $("#drop"+panelCounter).css("background-color"); 
-							var parts = rgbString.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-							delete (parts[0]);
-							for (var i = 1; i <= 3; ++i) {
-								 parts[i] = parseInt(parts[i]).toString(16);
-								 if (parts[i].length == 1) parts[i] = '0' + parts[i];
-							} 
-							var hexString =parts.join('').toUpperCase();
-							return hexString;
-				}
-				/***** Saving *****/
-					var panelData = {
-								panel: []
-						};
-					var textboxData = {
-								textbox: []
-						};
-					function svaing()
-					{
-						$(".panelpoup").hide();
-						$(".textpoup").hide();
-						/***** Setting Json Data starts****/
-						panelData.panel=[];
-						textboxData.textbox=[];
-						for(i=1;i<=panelCounter;i++)
-						 {
-								 //alert($("#drag"+i).parent().attr('id'));
-							panelData.panel.push({ 
-								"dragid"			: "drag"+i,
-								"dropid"			: "drop"+i, 
-								"contentid"			: "ptext"+i, 
-								"name"			: $("#drag"+i).attr("data-name"),
-								"x"				: $("#drag"+i).position().left,
-								"y"				: $("#drag"+i).position().top,
-								"width"			: $("#drag"+i).outerWidth(true),
-								"height"		: $("#drag"+i).outerHeight(true),
-								"text"			: $("#ptext"+i).text(),
-								"borderColor"	: $("#drop"+i).css("outline-color") ,
-								"zindex"		: $("#drag"+i).css("z-index"),
-								"parent"		: $("#drag"+i).parent(),
-								//"borderRadius"	:	,
-								"bgColor"		: hexColor($("#drop"+i).css("background-color"))
-							});
-						 }
-						 dataTosave[0] = panelData;
-						 for(i=1;i<=textCounter;i++)
-						 {
-							 
-							textboxData.textbox.push({ 
-								"dragid"			: "tdrag"+i,
-								"dropid"			: "text"+i, 
-								"contentid"			: "txt"+i, 
-								"name"			: $("#tdrag"+i).attr("data-name"),
-								"x"				: $("#tdrag"+i).position().left,
-								"y"				: $("#tdrag"+i).position().top,
-								"width"			: $("#tdrag"+i).outerWidth(true),
-								"height"		: $("#tdrag"+i).outerHeight(true),
-								"text"			: $("#txt"+i).text(),
-								"borderColor"	: $("#text"+i).css("outline-color") ,
-								"zindex"		: $("#tdrag"+i).css("z-index"),
-								"parent"		: $("#tdrag"+i).parent(),
-								"font"			: $("#txt"+i).css("font-family"),
-								"size"			: $("#txt"+i).css("font-size"),
-								"fonts"			: $("#txt"+i).css("font-style"),
-								"fontw"			: $("#txt"+i).css("font-weight"),
-								"color"			: hexColor($("#txt"+i).css("color")),
-								"align"			: $("#txt"+i).css("text-align"),
-								//"borderRadius"	:	,
-								"bgColor"		: hexColor($("#text"+i).css("background-color"))
-							});
-						 }
-						 dataTosave[1] = textboxData;
-						/***** Setting Json Data ends****/
-						$("#droparea .panelwrapper,#droparea .textwrapper").remove();
-					}
-					$("#save").bind('click',function(e){
-						
-						svaing();
-					});
-				/*****Loading*****/
-					function loading()
-					{
-						/***** For Panel *****/
-							for(i=0;i<panelData.panel.length;i++)
-							{
-								//Panel.htmlClone(panelData.panel[i].id,panelData.panel[i].x,panelData.panel[i].y,panelData.panel[i].width,panelData.panel[i].height);
-								Panel.htmlClone(panelData.panel[i]);
-							}
-							for(i=0;i<panelData.panel.length;i++)
-							{
-								panelCounter=(i+1);
-								$("#drag"+panelCounter).bind('click',function(e){
-									e.stopPropagation();
-									panelClick($(this)); 
-								});
-								$("#drag"+panelCounter).bind('dblclick',function(e){
-									e.stopPropagation();
-									showPopu($(this)); 
-								});
-								$( "#drag"+panelCounter).draggable({
-									revert: "invalid",
-									drag: function( event, ui )
-									{
-										panelDrag=false;
-										superPanel=true;
-										activeElement="panel";
-										var lp=$(this).position().left;
-										var tp=$(this).position().top;	
-										panelXNeg=$(this).offset().left-dar;
-										panelYNeg=$(this).offset().top-datr;
-									/***** setting properties values *****/
-										$("#name").val($(this).attr("data-name"));
-										$("#xpos").val(lp);
-										$("#ypos").val(tp);
-										$("#width").val($(this).outerWidth(true));
-										$("#height").val($(this).outerHeight(true));
-										
-									},
-									start: function( event, ui )
-									{
-										tlp=$(this).offset().left-dar-1;
-										ttp=$(this).offset().top-datr-1;
-										$(".content").css({"display":"none"});
-										$(".panelhide").css({"display":"none"});
-										$(".pst").css({"display":"block"});
-										$(".drpanel").removeClass('addborder');
-										$(".textel").removeClass('addborder');
-										$(this).children('div.drpanel').addClass('addborder');
-									},
-									stop: function(event, ui)
-									{				
-											dragElementProcess($(this), ui);
-									}
-								}); 
-								$('#drop'+panelCounter).resizable({
-									handles: 'n,e,s,w,se,sw,ne,nw',
-									 start: function(e, ui) {
-											rlp=$(this).parent().offset().left-dar; 
-											rtp=$(this).parent().offset().top-datr; 
-											
-									 },	
-									resize: function(e, ui) {
-										
-										
-										
-										var lp=$(this).parent().offset().left-dar; 
-										var tp=$(this).parent().offset().top-datr; 
-										$(this).parent().width($(this).outerWidth(true));
-										$(this).parent().height($(this).outerHeight(true));
-										
-										
-										
-										$("#xpos").val(lp+$(this).position().left);
-										$("#ypos").val(tp+$(this).position().top);
-										$("#width").val($(this).outerWidth(true));
-										$("#height").val($(this).outerHeight(true));
-										
-										/*** bound for width ***/																	
-											if(lp+parseInt($(this).position().left)<rlp+4)
-											{
-												$(this).resizable( "option", "maxWidth",editAreaWidth-4);
-												if(lp+parseInt($(this).position().left)<1)
-												{
-													$(this).resizable( "option", "maxWidth", $(this).outerWidth(true)-2);
-													
-												}
-											}
-											else if(rlp+parseInt($(this).outerWidth(true))>editAreaWidth-4)
-											{
-												$(this).resizable( "option", "maxWidth", $(this).outerWidth(true));
-											}
-											
-										/*** bound for height ***/																	
-											if(tp+parseInt($(this).position().top)<rtp+4)
-											{
-												$(this).resizable( "option", "maxHeight",editAreaHeight-22);
-												if(tp+parseInt($(this).position().top)<1)
-												{
-													$(this).resizable( "option", "maxHeight", $(this).outerHeight(true)-22);
-													
-												}
-											}
-											else if(rtp+parseInt($(this).outerHeight(true))>editAreaHeight-22)
-											{
-												$(this).resizable( "option", "maxHeight", $(this).outerHeight(true));
-											}
-										
-									} ,
-									stop: function(e, ui) {
-										
-										var lp=$(this).parent().position().left; 
-										var tp=$(this).parent().position().top;
-										$(this).parent().css({"left":lp+$(this).position().left,"top":tp+$(this).position().top});
-									
-										
-										/**** positioning for width boundation ****/
-										if(lp+parseInt($(this).position().left)<=1) 
-										{
-											$(this).parent().css({"left":1});
-											$("#xpos").val(1);
-											$("#width").val($(this).outerWidth(true));
-											$("#ypos").val(tp);
-											$("#height").val($(this).outerHeight(true));
-										}
-										if(lp+parseInt($(this).position().left)+parseInt($(this).outerWidth(true))>=editAreaWidth-4) 
-										{
-											
-											if((editAreaWidth-4-$(this).outerWidth(true))<=1)
-											{
-												lp=1;
-											}
-											else
-											{
-												lp=(editAreaWidth-4-$(this).outerWidth(true));
-											}
-											
-											$(this).parent().css({"left":lp});
-											$("#xpos").val(lp);
-											$("#width").val($(this).outerWidth(true));
-											$("#ypos").val(tp);
-											$("#height").val($(this).outerHeight(true));
-										}
-										
-										
-										/**** positioning for height boundation ****/
-										if(tp+parseInt($(this).position().top)<=1) 
-										{
-											$(this).parent().css({"top":19});
-											$("#xpos").val(1);
-											$("#width").val($(this).outerWidth(true));
-											$("#ypos").val(19);
-										}
-										if(tp+parseInt($(this).position().top)+parseInt($(this).outerHeight(true))>=editAreaHeight-20) 
-										{
-											
-											if((editAreaHeight-22-$(this).outerHeight(true))<=1)
-											{
-												tp=19;
-												$("#ypos").val(19);
-											}
-											else
-											{
-												tp=(editAreaHeight-22-$(this).outerHeight(true));
-											}
-											
-											$(this).parent().css({"top":tp});
-											$("#xpos").val(lp);
-											$("#width").val($(this).outerWidth(true));
-											$("#ypos").val(tp);
-											$("#height").val($(this).outerHeight(true));
-										}
-										
-										$(this).css({"left":0,"top":0});
-										$(this).resizable( "option", "maxWidth",700);
-										$(this).resizable( "option", "maxHeight",700);
-										
-									}
-							   });
-								
-								$("#drop"+panelCounter).droppable({
-									revert: "invalid",
-									drop: function(event, ui)
-									{	
-										dropElProcess($(this),ui);			
-									}
-								}); 
-							}
-							for(i=0;i<panelData.panel.length;i++)
-							{
-								//alert("source"+panelData.panel[i].dropid);
-								//alert("target"+panelData.panel[i].parent.attr('id'));
-								if(panelData.panel[i].parent.attr('id')!="droparea")
-								{
-									$("#"+panelData.panel[i].dragid).appendTo($("#"+panelData.panel[i].parent.attr('id'))); 
-								}
-							}
-						/*****For TextBox *****/
-							for(i=0;i<textboxData.textbox.length;i++)
-							{
-								Textbox.htmlClone(textboxData.textbox[i]);
-							}
-							for(i=0;i<textboxData.textbox.length;i++)
-							{
-									textCounter=(i+1);
-									$("#tdrag"+textCounter).bind('click',function(e){
-											e.stopPropagation();
-											textClick($(this)); 
-									});
-									$("#tdrag"+textCounter).bind('dblclick',function(e){
-											e.stopPropagation();
-											textShowPop($(this)); 
-										});
-										$(".textel").change(function(){
-												$("#text").val($(this).val());
-												$("#ticont").val($(this).val());
-										});
-										textActive=$("#tdrop"+textCounter);
-									
-										$("#tdrag"+textCounter).draggable({
-												revert: "invalid",
-												drag: function( event, ui )
-												{
-												
-													superText=true;
-													textDrag=true;
-													panelDrag=false;
-													activeElement="text";
-													var lp=$(this).offset().left-dar;
-													var tp=$(this).offset().top-datr;
-								
-													panelXNeg=$(this).offset().left-dar;
-													panelYNeg=$(this).offset().top-datr;
-								
-													
-												/***** setting properties values *****/
-									
-													$("#name").val($(this).attr("data-name"));
-													$("#xpos").val(lp);
-													$("#ypos").val(tp);
-													$("#width").val($(this).outerWidth(true));
-													$("#height").val($(this).outerHeight(true));
-													$("#text").val($("#txt"+$(this).attr('id').split('tdrag')[1]).text());
-												},
-												start: function( event, ui )
-												{
-													$(".content").css({"display":"block"});
-													$(".panelhide").css({"display":"block"});
-													$(".pst").css({"display":"none"});
-													$(".drpanel").removeClass('addborder');
-													$(".textel").removeClass('addborder');
-													$(this).children('div.textel').addClass('addborder');
-													superText=true;
-													textDrag=true;
-													
-													activeElement="text";
-													var lp=$(this).offset().left-dar;
-													var tp=$(this).offset().top-datr;
-													
-												},
-												stop: function(event, ui)
-												{	
-														superText=false;
-														dragElementProcess($(this),ui);
-												}
-										}); 
-										/**resize**/
-										$('#text'+textCounter).resizable({
-											handles: 'n,e,s,w,se,sw,ne,nw',
-											 start: function(e, ui) {
-													rlp=$(this).parent().offset().left-dar; 
-													rtp=$(this).parent().offset().top-datr; 
-													
-											 },	
-											resize: function(e, ui) {
-												var lp=$(this).parent().position().left; 
-												var tp=$(this).parent().position().top; 
-												$(this).parent().width($(this).outerWidth(true));
-												$(this).parent().height($(this).outerHeight(true));
-												
-												 /*** bound for width ***/																	
-													if(lp+parseInt($(this).position().left)<rlp+4)
-													{
-														$(this).resizable( "option", "maxWidth",editAreaWidth-4);
-														if(lp+parseInt($(this).position().left)<1)
-														{
-															$(this).resizable( "option", "maxWidth", $(this).outerWidth(true)-2);
-															
-														}
-													}
-													else if(rlp+parseInt($(this).outerWidth(true))>editAreaWidth-4)
-													{
-														$(this).resizable( "option", "maxWidth", $(this).outerWidth(true));
-													}
-												/*** bound for height ***/																	
-													if(tp+parseInt($(this).position().top)<rtp+4)
-													{
-														$(this).resizable( "option", "maxHeight",editAreaHeight-22);
-														if(tp+parseInt($(this).position().top)<1)
-														{
-															$(this).resizable( "option", "maxHeight", $(this).outerHeight(true)-22);
-															
-														}
-													}
-													else if(rtp+parseInt($(this).outerHeight(true))>editAreaHeight-22)
-													{
-														$(this).resizable( "option", "maxHeight", $(this).outerHeight(true));
-													}
-													
-												$("#xpos").val(lp);
-												$("#ypos").val(tp);
-												$("#width").val($(this).outerWidth(true));
-												$("#height").val($(this).outerHeight(true));
-												
-											},
-											stop: function(e, ui) {
-												
-												var lp=$(this).parent().position().left; 
-												var tp=$(this).parent().position().top;
-												$(this).parent().css({"left":lp+$(this).position().left,"top":tp+$(this).position().top});
-												
-												/**** positioning for width boundation ****/
-												if(lp+parseInt($(this).position().left)<=1) 
-												{
-													$(this).parent().css({"left":1});
-													$("#xpos").val(1);
-													$("#width").val($(this).outerWidth(true));
-													$("#ypos").val(tp);
-													$("#height").val($(this).outerHeight(true));
-												}
-												if(lp+parseInt($(this).position().left)+parseInt($(this).outerWidth(true))>=editAreaWidth-4) 
-												{
-													
-													if((editAreaWidth-4-$(this).outerWidth(true))<=1)
-													{
-														lp=1;
-													}
-													else
-													{
-														lp=(editAreaWidth-4-$(this).outerWidth(true));
-													}
-													
-													$(this).parent().css({"left":lp});
-													$("#xpos").val(lp);
-													$("#width").val($(this).outerWidth(true));
-													$("#ypos").val(tp);
-													$("#height").val($(this).outerHeight(true));
-												}
-												 
-												 /**** positioning for height boundation ****/
-												if(tp+parseInt($(this).position().top)<=1) 
-												{
-													$(this).parent().css({"top":19});
-													$("#xpos").val(1);
-													$("#width").val($(this).outerWidth(true));
-													$("#ypos").val(19);
-												}
-												if(tp+parseInt($(this).position().top)+parseInt($(this).outerHeight(true))>=editAreaHeight-20) 
-												{
-													
-													if((editAreaHeight-22-$(this).outerHeight(true))<=1)
-													{
-														tp=19;
-														$("#ypos").val(19);
-													}
-													else
-													{
-														tp=(editAreaHeight-22-$(this).outerHeight(true));
-													}
-													
-													$(this).parent().css({"top":tp});
-													$("#xpos").val(lp);
-													$("#width").val($(this).outerWidth(true));
-													$("#ypos").val(tp);
-													$("#height").val($(this).outerHeight(true));
-												}
-												$(this).css({"left":0,"top":0});
-												$(this).resizable( "option", "maxWidth",700);
-												$(this).resizable( "option", "maxHeight",700);
-											} 
-																		
-										 });
-							}
-							for(i=0;i<textboxData.textbox.length;i++)
-							{
-								
-								if(textboxData.textbox[i].parent.attr('id')!="droparea")
-								{
-									$("#"+textboxData.textbox[i].dragid).appendTo($("#"+textboxData.textbox[i].parent.attr('id'))); 
-								}
-							}
-						
-						panelData.panel=[];
-						textboxData.textbox=[];
-					}
-					$("#load").bind('click',function(e){
-							loading();
-					});
+				
+					
+				
+					
 	}); //end of elements
 
 });
