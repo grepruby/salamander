@@ -4,248 +4,228 @@
 <meta charset="utf-8">
 <title>Salamander</title>
 <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/custom.css">
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script type="text/javascript" src="/js/jquery-ui.js"></script>
 <link rel="stylesheet" type="text/css" href="/css/jquery-ui.css"/>
-<link href="/css/jquery.mCustomScrollbar.css" rel="stylesheet" />	
-<script type="text/javascript" src="/js/script.js"></script>
-<%= csrf_meta_tags %>
-</head>
+<link href="/css/jquery.mCustomScrollbar.css" rel="stylesheet" />
+<script type="text/javascript" src="/js/parameter.js"></script>
+<script type="text/javascript" src="/js/scriptnode.js"></script>	 
 
+<!--<script type="text/javascript" src="/js/script.js"></script>	-->
+
+</head>
 <body>
 	<div class="wrapper">
-  	<header>
-  		<div style="display:inline-block;width:450px;">
-	    	<h1 class="logo"><%= link_to '<span>SALA</span>MANDER</a>'.html_safe, root_path, :class => 'brand' %></h1>
-	      <h2 class="tagline">your content editor</h2>
-	    </div>
-      <div style="display:inline-block;width:500px;">
-	      <ul style="padding: 0;margin:0;list-style-type: none;">
-				  <% if user_signed_in? %>
-				    <li style="display: inline; padding:20px;">
-				    <%= link_to 'Logout', destroy_user_session_path, :method=>'delete' %>
-				    </li>
-				  <% else %>
-				    <li style="display: inline; padding:20px;">
-				    <%= link_to 'Login', new_user_session_path %>
-				    </li>
-				  <% end %>
-				  <% if user_signed_in? %>
-				    <li style="display: inline; padding:20px;">
-				    <%= link_to 'Projects', projects_path %>
-				    </li>
-				    <li style="display: inline; padding:20px;">
-				    <%= link_to 'Edit account', edit_user_registration_path %>
-				    </li>
-				    <% if current_user.has_role? :admin %>
-				      <li style="display: inline; padding:20px;">
-				      <%= link_to 'Admin', users_path %>
-				      </li>
-				    <% end %>
-				  <% else %>
-				    <li style="display: inline; padding:20px;">
-				    <%= link_to 'Sign up', new_user_registration_path %>
-				    </li>
-				  <% end %>
-				</ul>
-			</div>
-    </header>
-		<div class="bdcontent">
-			<div class="bdwrapper">
-	    	<div class="toolbox">
-        	<h3>ToolBox</h3>
-        	<div class="toolswrapper">
-          	<div id="tool1" class="toolsw">
-            	<img src="/images/divpanel.png" alt="" class="clonepanel">
-          		<div class="tools" id="divpanel">
-          		<h2>Div Panel</h2>
-             		<div class="panel" id="panel1"></div>
-        		  </div>
+    	<header>
+        	<h1 class="logo"><a href="#"><span>SALA</span>MANDER</a></h1>
+            <h2 class="tagline">your content editor</h2>
+        </header>
+        <div class="bdcontent">
+        	<div class="toolbar">
+            	<input type="button" name="scriptmode" value="script" id="scriptmode" class="toolbarbutton"  />
+                <input type="button" name="close" value="Close" id="close" class="toolbarbutton" />
+                
             </div>
-            <div id="tool2" class="toolsw">
-            	<img src="/images/textbox.png" alt="" class="clonetextbx">
-              <div class="tools" id="textpanel">
-                <h2>Text Input Box</h2>
-                <div class="textbx" id="ttext"></div>
-            </div>
-          </div>		                
-        </div>
-      </div>
-      <div class="editorarea" id="droparea">
-        <div class="panelpoup" id="nops">
-        	<label for="idname">ID<input type="text" value="" id="idname" name="idname"></label>
-					<label for="icont">Content<input type="text" value="" id="icont" name="icont"></label>
-          <div class="layer">
-          	<p>Layer</p>
-            <ul class="menuclick">
-            	<li id="p1"><img src="/images/img1.png" alt="Bring to Front" title="Bring to Front"></li>
-              <li id="p2"><img src="/images/img2.png" alt="Bring Forward" title="Bring Forward"></li>
-              <li id="p3"><img src="/images/img3.png" alt="Send Backward" title="Send Backward"></li>
-              <li id="p4"><img src="/images/img4.png" alt="Send to Back" title="Send to Back"></li>
-            </ul><br class="spacer">
-          </div>
-        </div>			
-				<div class="textpoup"  id="nots">
-        	<label for="tidname">ID<input type="text" value="" id="tidname" name="tidname"></label>
-					<label for="ticont">Content<input type="text" value="" id="ticont" name="ticont"></label>
-          <div class="layer">
-          	<p>Layer</p>
-            <ul class="tmenuclick">
-            	<li id="tp1"><img src="/images/img1.png" alt="Bring to Front" title="Bring to Front"></li>
-              <li id="tp2"><img src="/images/img2.png" alt="Bring Forward" title="Bring Forward"></li>
-              <li id="tp3"><img src="/images/img3.png" alt="Send Backward" title="Send Backward"></li>
-              <li id="tp4"><img src="/images/img4.png" alt="Send to Back" title="Send to Back"></li>
-            </ul><br class="spacer">	
-          </div>
-        </div>	
-      </div>
-      <div class="propertiesbar">
-      	<div class="propblock">
-       		<h2>Properties</h2>
-          <div id="content_1" class="content">
-        	 	<div class="blockwrapper">
-            	<p><label for="name">Name</label><input class="pop" type="text" value="" id="name"></p>
-              <p class="even"><label for="xpos">X Pos</label><input class="pop" type="text" value="" id="xpos"></p>
-              <p><label for="ypos">Y Pos</label><input class="pop" type="text" value="" id="ypos"></p>
-              <p class="even"><label for="width" >Width</label><input class="pop" type="text" value="" id="width"></p>
-              <p><label for="height" >Height</label><input class="pop" type="text" value="" id="height"></p>
-              <p class="even"><label for="text" >Text</label><input class="pop" type="text" value="" id="text"></p>		                    
-            </div>	
-       		</div>
-        </div>     
-        <div class="propblock">
-        	<h2>Style</h2>
-            <div id="content_2" class="content">
-           	  <div class="blockwrapper">		
-              	<p class="panelhide"><label for="fontface">Font Face</label>
-									<select id="fontface">
-										<option value="-1">Font</option>
-										<option value="Arial">Arial</option>
-										<option value="Verdana">Verdana</option>
-										<option value="Georgia">Georgia</option>
-									</select>
-								</p>
-                <p class="even panelhide"><label for="name">Font Size</label>
-									<select id="fontsize">
-										<option value="-1">Size</option>
-										<option value="10">10</option>
-										<option value="14">14</option>
-										<option value="20">20</option>
-									</select>
-								</p>
-                <p class="panelhide"><label for="name">Font Style</label>
-									<select id="fontstyle">
-										<option value="-1">Style</option>
-										<option value="Italic">Italic</option>
-										<option value="Bold">Bold</option>
-										<option value="Regular">Regular</option>
-									</select>
-								</p>
-								<p class="even pst"><label for="bcolor" >B Color</label>
+        	<div class="bdwrapper">
+            	<div class="scriptnode">
+                	<div id="nodelist">
+                    </div>
+                </div>
+                <div class="scriptpanel">
+                    <div id="scriptarea">
+                        <div class="appname">
+                            <select id="elementname" class="custom">
+                                
+                            </select>
+                        </div >
+                        <div class="appevent">
+                            <select id="eventname">
+                            </select>
+                        </div><br class="spacer">
+                        
+                    </div>
+                </div>
+                <div class="cloneeditorarea">                </div>
+            	<div class="toolbox">
+                	<h3>ToolBox</h3>
+                	<div class="toolswrapper">
+                    	<div id="tool1" class="toolsw">
+                        	<img src="/images/divpanel.png" alt="" class="clonepanel">
+                    		<div class="tools" id="divpanel">
+                        		<h2>Div Panel</h2>
+                           		<div class="panel" id="panel1"></div>
+                   		  </div>
+                        </div>
+                        <div id="tool2" class="toolsw">
+                        	<img src="/images/textbox.png" alt="" class="clonetextbx">
+                            <div class="tools" id="textpanel">
+                                <h2>Text Input Box</h2>
+                                <div class="textbx" id="ttext"></div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="editorarea" id="droparea">
+                    <div class="panelpoup" id="nops">
+                    	<label for="idname">ID<input type="text" value="" id="idname" name="idname"></label>
+						<label for="icont">Content<input type="text" value="" id="icont" name="icont"></label>
+                        <div class="layer">
+                        	<p>Layer</p>
+                            <ul class="menuclick">
+                            	<li id="p1"><img src="/images/img1.png" alt="Bring to Front" title="Bring to Front"></li>
+                                <li id="p2"><img src="/images/img2.png" alt="Bring Forward" title="Bring Forward"></li>
+                                <li id="p3"><img src="/images/img3.png" alt="Send Backward" title="Send Backward"></li>
+                                <li id="p4"><img src="/images/img4.png" alt="Send to Back" title="Send to Back"></li>
+                            </ul><br class="spacer">
+                        </div>
+                    </div>
+					<div class="textpoup"  id="nots">
+                    	<label for="tidname">ID<input type="text" value="" id="tidname" name="tidname"></label>
+						<label for="ticont">Content<input type="text" value="" id="ticont" name="ticont"></label>
+                        <div class="layer">
+                        	<p>Layer</p>
+                            <ul class="tmenuclick">
+                            	<li id="tp1"><img src="/images/img1.png" alt="Bring to Front" title="Bring to Front"></li>
+                                <li id="tp2"><img src="/images/img2.png" alt="Bring Forward" title="Bring Forward"></li>
+                                <li id="tp3"><img src="/images/img3.png" alt="Send Backward" title="Send Backward"></li>
+                                <li id="tp4"><img src="/images/img4.png" alt="Send to Back" title="Send to Back"></li>
+                            </ul><br class="spacer">
+                        </div>
+                    </div>	
+                </div>
+                <div class="propertiesbar">
+                	<div class="propblock">
+                       		<h2>Properties</h2>
+                            <div id="content_1" class="content">
+                          	 	<div class="blockwrapper">
+                        	<p><label for="name">Name</label><input class="pop" type="text" value="" id="name"></p>
+                            <p class="even"><label for="xpos">X Pos</label><input class="pop" type="text" value="" id="xpos"></p>
+                            <p><label for="ypos">Y Pos</label><input class="pop" type="text" value="" id="ypos"></p>
+                            <p class="even"><label for="width" >Width</label><input class="pop" type="text" value="" id="width"></p>
+                            <p><label for="height" >Height</label><input class="pop" type="text" value="" id="height"></p>
+                            <p class="even"><label for="text" >Text</label><input class="pop" type="text" value="" id="text"></p>
+                            
+                            
+                        </div>	
+                       		</div>
+                  </div>
+               
+                    <div class="propblock">
+                    	<h2>Style</h2>
+                         <div id="content_2" class="content">
+                       	  <div class="blockwrapper">
+						
+							
+                        	<p class="panelhide"><label for="fontface">Font Face</label>
+								<select id="fontface">
+									<option value="-1">Font</option>
+									<option value="Arial">Arial</option>
+									<option value="Verdana">Verdana</option>
+									<option value="Georgia">Georgia</option>
+								</select>
+							</p>
+							 
+                            <p class="even panelhide"><label for="name">Font Size</label>
+								<select id="fontsize">
+									<option value="-1">Size</option>
+									<option value="10">10</option>
+									<option value="14">14</option>
+									<option value="20">20</option>
+								</select>
+							</p>
+                            <p class="panelhide"><label for="name">Font Style</label>
+								<select id="fontstyle">
+									<option value="-1">Style</option>
+									<option value="Italic">Italic</option>
+									<option value="Bold">Bold</option>
+									<option value="Regular">Regular</option>
+								</select>
+							</p>
+							<p class="even pst"><label for="bcolor" >B Color</label>
 									<select id="bcolor">
-										<option value="-1">B Color</option>
-										<option value="13EC46">Green</option>
-										<option value="EC3B13">Red</option>
-										<option value="FFFFFF">White</option>
-										<option value="000000">Black</option>
-									</select>
-								</p>
-              	<p class="even panelhide"><label for="name" >Color</label>
+									<option value="-1">B Color</option>
+									<option value="13EC46">Green</option>
+									<option value="EC3B13">Red</option>
+									<option value="FFFFFF">White</option>
+									<option value="000000">Black</option>
+									
+								</select>
+							</p>
+                            <p class="even panelhide"><label for="name" >Color</label>
 									<select id="fontcolor">
-										<option value="-1">Color</option>
-										<option value="13EC46">Green</option>
-										<option value="EC3B13">Red</option>
-										<option value="FFFFFF">White</option>
-										<option value="000000">Black</option>
-									</select>
-								</p>
-								<p class="pst"><label for="radius">B Radius</label>
-									<select id="radius">
-										<option value="-1">Radius</option>
-										<option value="0">0</option>
-										<option value="10">5</option>
-										<option value="14">8</option>
-										<option value="20">10</option>
-									</select>
-								</p>
-                <p class="panelhide"><label for="name" >Align</label>
-									<select id="align">
-										<option value="-1">Align</option>
-										<option value="center">center</option>
-										<option value="right">right</option>
-										<option value="left">left</option>		
-									</select>
-								</p>
-              	<p class="even"><label for="name" >Bg Color</label>
-									<select id="bgcolor">
-                		<option value="-1">BgColor</option>
-										<option value="C9C9C9">Gray</option>
-                    <option value="13EC46">Green</option>
-										<option value="EC3B13">Red</option>
-										<option value="FFFFFF">White</option>
-										<option value="000000">Black</option>
-									</select>
-								</p>
-              </div>	
+									<option value="-1">Color</option>
+									<option value="13EC46">Green</option>
+									<option value="EC3B13">Red</option>
+									<option value="FFFFFF">White</option>
+									<option value="000000">Black</option>
+									
+								</select>
+							</p>
+							<p class="pst"><label for="radius">B Radius</label>
+								<select id="radius">
+									<option value="-1">Radius</option>
+									<option value="0">0</option>
+									<option value="10">5</option>
+									<option value="14">8</option>
+									<option value="20">10</option>
+								</select>
+							</p>
+                            <p class="panelhide"><label for="name" >Align</label>
+								<select id="align">
+									<option value="-1">Align</option>
+									<option value="center">center</option>
+									<option value="right">right</option>
+									<option value="left">left</option>
+									
+									
+								</select>
+							</p>
+                            <p class="even"><label for="name" >Bg Color</label>
+							<select id="bgcolor">
+                            		<option value="-1">BgColor</option>
+									<option value="C9C9C9">Gray</option>
+                                    <option value="13EC46">Green</option>
+									<option value="EC3B13">Red</option>
+									<option value="FFFFFF">White</option>
+									<option value="000000">Black</option>
+							</select></p>
+                        </div>	
+                        </div>
+                    </div>
+              </div>
+                <br class="spacer">
+               
+               
             </div>
-          </div>
-      	</div><br class="spacer">
-  		</div>
-		</div>
-		<button id="svaing">save</button>
-    <input type="button" id="loading" value="load" />
-		<button id="save" style="display:none;">ok</button>
-		<footer>
-			<p>Copyright &copy; 2012-2013 Salamander. All Rights Reserved</p>
-		</footer>
-        <div class="savedataview">
-        	<h2>External</h2>
-            <table id="external" border="1" width="100%" align="center" style="text-align:center;">
-            	<tr>
-                    <td>Name</td>
-                    <td>XPos</td>
-                    <td>YPos</td>
-                    <td>Width</td>
-                    <td>Height</td>
-                    <td>Text</td>
-                    <td>ZIndex</td>
-                </tr>
-            </table><br>
-            <hr>
-            <br>
-            <h2>Internal</h2>
-            <table id="internal" border="1" width="100%" align="center" style="text-align:center;">
-            	<tr>
-                    <td>Name</td>
-                    <td>XPos</td>
-                    <td>YPos</td>
-                    <td>Width</td>
-                    <td>Height</td>
-                    <td>Text</td>
-                    <td>ZIndex</td>
-                </tr>
-            </table>
+            <button id="svaing">save</button>
+            <input type="button" id="loading" value="load" />
+            <button id="save" style="display:none;">ok</button>
         </div>
+        <footer>
+        	<p>Copyright &copy; 2012-2013 Salamander. All Rights Reserved</p>
+        </footer>
     	
     </div>
-	</div>
-
-  <script src="/js/jquery.mCustomScrollbar.concat.min.js"></script>
-  <% @page.try(:elements).where(name:'panel').each do |element|%>
+    <script src="/js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script type="text/javascript" src="/js/selectbox.js"></script>
+    <script type="text/javascript" src="/js/elements.js"></script> 
+    <% @page.try(:elements).where(name:'panel').each do |element|%>
     <script type="text/javascript">
       panelData.panel.push({ 
-        "dragid"			: "<%= element.properties.where(name:'dragid').first.try(:value) %>",
-        "dropid"			: "<%= element.properties.where(name:'dropid').first.try(:value) %>", 
-        "contentid"			: "<%= element.properties.where(name:'contentid').first.try(:value) %>", 
-        "name"			: "<%= element.properties.where(name:'name').first.try(:value) %>",
-        "x"				: "<%= element.properties.where(name:'x').first.try(:value) %>",
-        "y"				: "<%= element.properties.where(name:'y').first.try(:value) %>",
-        "width"			: "<%= element.properties.where(name:'width').first.try(:value) %>",
-        "height"		: "<%= element.properties.where(name:'height').first.try(:value) %>",
-        "text"			: "<%= element.properties.where(name:'text').first.try(:value) %>",
-        "borderColor"	: "<%= element.properties.where(name:'borderColor').first.try(:value) %>" ,
-        "zindex"		: "<%= element.properties.where(name:'zindex').first.try(:value) %>",
-        "parent"		: "<%= element.properties.where(name:'parent').first.try(:value) || "droparea" %>"
+        "dragid"      : "<%= element.properties.where(name:'dragid').first.try(:value) %>",
+        "dropid"      : "<%= element.properties.where(name:'dropid').first.try(:value) %>", 
+        "contentid"     : "<%= element.properties.where(name:'contentid').first.try(:value) %>", 
+        "name"      : "<%= element.properties.where(name:'name').first.try(:value) %>",
+        "x"       : "<%= element.properties.where(name:'x').first.try(:value) %>",
+        "y"       : "<%= element.properties.where(name:'y').first.try(:value) %>",
+        "width"     : "<%= element.properties.where(name:'width').first.try(:value) %>",
+        "height"    : "<%= element.properties.where(name:'height').first.try(:value) %>",
+        "text"      : "<%= element.properties.where(name:'text').first.try(:value) %>",
+        "borderColor" : "<%= element.properties.where(name:'borderColor').first.try(:value) %>" ,
+        "zindex"    : "<%= element.properties.where(name:'zindex').first.try(:value) %>",
+        "parent"    : $('<%= escape_javascript(element.properties.where(name:'parent').first.try(:value).html_safe)%>')
       });
     </script>
   <% end %>
@@ -253,51 +233,55 @@
   <% @page.try(:elements).where(name:'textbox').each do |element|%>
     <script type="text/javascript">
       textboxData.textbox.push({ 
-        "dragid"			: "<%= element.properties.where(name:'dragid').first.try(:value) %>",
-        "dropid"			: "<%= element.properties.where(name:'dropid').first.try(:value) %>", 
-        "contentid"			: "<%= element.properties.where(name:'contentid').first.try(:value) %>", 
-        "name"			: "<%= element.properties.where(name:'name').first.try(:value) %>",
-        "x"				: "<%= element.properties.where(name:'x').first.try(:value) %>",
-        "y"				: "<%= element.properties.where(name:'y').first.try(:value) %>",
-        "width"			: "<%= element.properties.where(name:'width').first.try(:value) %>",
-        "height"		: "<%= element.properties.where(name:'height').first.try(:value) %>",
-        "text"			: "<%= element.properties.where(name:'text').first.try(:value) %>",
-        "borderColor"	: "<%= element.properties.where(name:'borderColor').first.try(:value) %>" ,
-        "zindex"		: "<%= element.properties.where(name:'zindex').first.try(:value) %>",
-        "parent"		: "<%= element.properties.where(name:'parent').first.try(:value) || "droparea" %>"
+        "dragid"      : "<%= element.properties.where(name:'dragid').first.try(:value) %>",
+        "dropid"      : "<%= element.properties.where(name:'dropid').first.try(:value) %>", 
+        "contentid"     : "<%= element.properties.where(name:'contentid').first.try(:value) %>", 
+        "name"      : "<%= element.properties.where(name:'name').first.try(:value) %>",
+        "x"       : "<%= element.properties.where(name:'x').first.try(:value) %>",
+        "y"       : "<%= element.properties.where(name:'y').first.try(:value) %>",
+        "width"     : "<%= element.properties.where(name:'width').first.try(:value) %>",
+        "height"    : "<%= element.properties.where(name:'height').first.try(:value) %>",
+        "text"      : "<%= element.properties.where(name:'text').first.try(:value) %>",
+        "borderColor" : "<%= element.properties.where(name:'borderColor').first.try(:value) %>" ,
+        "zindex"    : "<%= element.properties.where(name:'zindex').first.try(:value) %>",
+        "parent"    : $('<%= escape_javascript(element.properties.where(name:'parent').first.try(:value).html_safe)%>')
       });
     </script>
   <% end %>
-  <script type="text/javascript">
-    (function($){
-      $(window).load(function(){
-        $("#content_1").mCustomScrollbar();
-        $("#content_2").mCustomScrollbar();
-        loading("external");
-        loadInternal();
-      });
-    })(jQuery);
+    <script>
+		(function($){
+			$(window).load(function(){
+				$("#content_1").mCustomScrollbar();
+				$("#content_2").mCustomScrollbar();
+				//$(".scriptpanel").mCustomScrollbar();
+        loading();
+			});
+		})(jQuery);
+	</script>
+    <script>
+		$(window).load(function(){
+				$("#load").bind('click',function(e){
+							loading();
+					});
+		});
 
     var panelDone = false;
     var textDone = false;
     $("#loading").click(function(){
-      var table_str = "<tr><td>Name</td><td>XPos</td><td>YPos</td><td>Width</td><td>Height</td><td>Text</td><td>ZIndex</td></tr>";
-      $("#external").html(table_str);
-      $("#internal").html(table_str);
-      loading("external");
-      loadInternal();
+      loading();
     })
 
     function savedata(){
       if(panelData.panel.length > 0){
         for( i = 0 ; i < panelData.panel.length; i++){
+          parent = panelData.panel[i].parent[0].outerHTML;
           delete panelData.panel[i].parent;
           $.ajax({
             type: "POST",
             beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
             url: "<%= create_element_path(@project, @page) %>",
             dataType: 'json',
-            data: { type: "panel", pop: panelData.panel[i]}
+            data: { type: "panel", pop: panelData.panel[i], parent: parent}
           }).error(function(XMLHttpRequest, textStatus, errorThrown) {
           }).success(function(response) {
             if( panelData.panel.length == i){
@@ -311,13 +295,14 @@
 
       if(textboxData.textbox.length > 0){
         for( j = 0 ; j < textboxData.textbox.length; j++){
+          parent = textboxData.textbox[j].parent[0].outerHTML;
           delete textboxData.textbox[j].parent;
           $.ajax({
             type: "POST",
             beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
             url: "<%= create_element_path(@project, @page) %>",
             dataType: 'json',
-            data: { type: "textbox", pop: textboxData.textbox[j]}
+            data: { type: "textbox", pop: textboxData.textbox[j], parent: parent}
           }).error(function(XMLHttpRequest, textStatus, errorThrown) { 
           }).success(function(response) {
             if( textboxData.textbox.length == j){
@@ -334,7 +319,7 @@
     $("#svaing").click( function(){
       svaing();
       savedata();
-      redirect_to_list();
+      //redirect_to_list();
     });
 
     function redirect_to_list(){
@@ -345,11 +330,8 @@
         return false;
       }
     }
-    // Load attribute to tables
-    function loadInternal()
-    {
-      loading("internal");
-    }
-  </script>
+	</script>
+       
+   
 </body>
 </html>
