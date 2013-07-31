@@ -218,13 +218,14 @@
         "dropid"      : "<%= element.properties.where(name:'dropid').first.try(:value) %>", 
         "contentid"     : "<%= element.properties.where(name:'contentid').first.try(:value) %>", 
         "name"      : "<%= element.properties.where(name:'name').first.try(:value) %>",
-        "x"       : "<%= element.properties.where(name:'x').first.try(:value) %>",
-        "y"       : "<%= element.properties.where(name:'y').first.try(:value) %>",
-        "width"     : "<%= element.properties.where(name:'width').first.try(:value) %>",
-        "height"    : "<%= element.properties.where(name:'height').first.try(:value) %>",
+        //"bgColor"   : hexColor($("<%= element.properties.where(name:'dropid').first.try(:value) %>").css("<%= element.properties.where(name:'x').first.try(:value) %>")),
+        "x"       : <%= element.properties.where(name:'x').first.try(:value).to_f %>,
+        "y"       : <%= element.properties.where(name:'y').first.try(:value).to_f %>,
+        "width"     : <%= element.properties.where(name:'width').first.try(:value).to_f %>,
+        "height"    : <%= element.properties.where(name:'height').first.try(:value).to_f %>,
         "text"      : "<%= element.properties.where(name:'text').first.try(:value) %>",
-        "borderColor" : "<%= element.properties.where(name:'borderColor').first.try(:value) %>" ,
-        "zindex"    : "<%= element.properties.where(name:'zindex').first.try(:value) %>",
+        "borderColor" : $("<%= element.properties.where(name:'dropid').first.try(:value) %>").css("<%= element.properties.where(name:'borderColor').first.try(:value) %>") ,
+        "zindex"    : $("<%= element.properties.where(name:'dragid').first.try(:value) %>").css("<%= element.properties.where(name:'zindex').first.try(:value) %>"),
         "parent"    : $('<%= escape_javascript(element.properties.where(name:'parent').first.try(:value).html_safe)%>')
       });
     </script>
@@ -237,10 +238,10 @@
         "dropid"      : "<%= element.properties.where(name:'dropid').first.try(:value) %>", 
         "contentid"     : "<%= element.properties.where(name:'contentid').first.try(:value) %>", 
         "name"      : "<%= element.properties.where(name:'name').first.try(:value) %>",
-        "x"       : "<%= element.properties.where(name:'x').first.try(:value) %>",
-        "y"       : "<%= element.properties.where(name:'y').first.try(:value) %>",
-        "width"     : "<%= element.properties.where(name:'width').first.try(:value) %>",
-        "height"    : "<%= element.properties.where(name:'height').first.try(:value) %>",
+        "x"       : <%= element.properties.where(name:'x').first.try(:value).to_f %>,
+        "y"       : <%= element.properties.where(name:'y').first.try(:value).to_f %>,
+        "width"     : <%= element.properties.where(name:'width').first.try(:value).to_f %>,
+        "height"    : <%= element.properties.where(name:'height').first.try(:value).to_f %>,
         "text"      : "<%= element.properties.where(name:'text').first.try(:value) %>",
         "borderColor" : "<%= element.properties.where(name:'borderColor').first.try(:value) %>" ,
         "zindex"    : "<%= element.properties.where(name:'zindex').first.try(:value) %>",
@@ -260,6 +261,7 @@
 	</script>
     <script>
 		$(window).load(function(){
+      console.log(panelData.panel)
 				$("#load").bind('click',function(e){
 							loading();
 					});
