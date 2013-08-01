@@ -318,9 +318,24 @@
       }
     }
 
+    function delete_previous(){
+      if ((panelData.panel.length > 0) || (textboxData.textbox.length > 0)){
+        $.ajax({
+            type: "POST",
+            url: "<%= destroy_each_path(@project, @page) %>",
+          }).error(function(XMLHttpRequest, textStatus, errorThrown) { 
+            return false;
+          }).success(function(response) {
+          });   
+      }
+    }
+
     $("#svaing").click( function(){
+      delete_previous();
+      textboxData.textbox = [];
+      panelData.panel = [];
       svaing();
-      savedata();
+      setTimeout(savedata, 2000)
       //redirect_to_list();
     });
 

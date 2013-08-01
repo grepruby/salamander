@@ -1,6 +1,6 @@
 class ElementsController < ApplicationController
   layout false
-  protect_from_forgery :except => :create_element 
+  protect_from_forgery :except => [:create_element, :destroy_each]
 
   def create_element
     #debugger
@@ -20,5 +20,12 @@ class ElementsController < ApplicationController
         format.js {   render( :json => ["ERROR"] ) }
       end
     end
+  end
+
+  def destroy_each
+    project = current_user.projects.find(params[:project_id])
+    page = project.pages.find(params[:page_id])
+    page.elements.destroy_all
+    render :nothing => true, :status => 200
   end
 end
