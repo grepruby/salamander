@@ -1,5 +1,5 @@
 class Page < ActiveRecord::Base
   has_many :elements
-  belongs_to :project
-  attr_accessible :name
+  belongs_to :user
+  attr_accessible :name, :user_id
 end

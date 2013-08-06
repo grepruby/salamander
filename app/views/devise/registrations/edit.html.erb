@@ -1,14 +1,17 @@
 <h2>Edit <%= resource_name.to_s.humanize %></h2>
-<%= simple_form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put, :class => 'form-vertical' }) do |f| %>
+<%= simple_form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :multipart => true, :method => :put, :class => 'form-vertical' }) do |f| %>
   <%= f.error_notification %>
   <%= display_base_errors resource %>
+  <%= f.input :username, :required => true, :input_html => {:disabled => true} %>
   <%= f.input :name, :autofocus => true %>
-  <%= f.input :email, :required => true %>
-  <%= f.input :dob, start_year: Date.today.year - 80, end_year: Date.today.year - 3 %>
-  <%= f.input :gender %>
+  <%= f.input :email, :required => true, :input_html => {:disabled => true} %>
   <%= f.input :password, :autocomplete => "off", :hint => "leave it blank if you don't want to change it", :required => false %>
   <%= f.input :password_confirmation, :required => false %>
   <%= f.input :current_password, :hint => "we need your current password to confirm your changes", :required => true %>
+  <%= f.input :dob, start_year: Date.today.year - 80, end_year: Date.today.year - 3 %>
+  <%= f.input :location %>
+  <%= f.select :gender, [['Male', '1'],['Female', '0']] %>
+  <%= f.file_field :image %>
   <%= f.button :submit, 'Update', :class => 'btn-primary' %>
 <% end %>
 <h3>Cancel my account</h3>

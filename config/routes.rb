@@ -1,15 +1,13 @@
 Rails3BootstrapDeviseCancan::Application.routes.draw do
 
-  resources :projects do
-    resources :pages do
-      resources :elements do
-        resources :properties
-      end
+  resources :pages do
+    resources :elements do
+      resources :properties
     end
   end
 
-  post 'projects/:project_id/pages/:page_id/create_element' => "elements#create_element", :as => :create_element
-  post 'projects/:project_id/pages/:page_id/destroy_each' => "elements#destroy_each", :as => :destroy_each
+  post 'pages/:id/create_element' => "elements#create_element", :as => :create_element
+  post 'pages/:id/destroy_each' => "elements#destroy_each", :as => :destroy_each
 
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 

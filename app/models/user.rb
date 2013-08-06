@@ -8,12 +8,13 @@ class User < ActiveRecord::Base
 
   # Setup accessible (or protected) attributes for your model
   attr_accessible :role_ids, :as => :admin
-  attr_accessible :name, :email, :password, :password_confirmation, :remember_me, :dob, :gender
+  attr_accessible :name, :email, :username, :password, :password_confirmation, :remember_me, :dob, :gender, :image, :location
+  validates :username, :uniqueness => true
+  has_many :pages, :dependent => :destroy
+  mount_uploader :image, ImageUploader
 
-  has_many :projects, dependent: :destroy
-
-  def username
-    name
-  end
+  #def username
+  #  name
+  #end
 
 end

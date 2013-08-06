@@ -1,24 +1,55 @@
-<h1>Listing pages</h1>
+<h1>App Salamander</h1>
 
-<table id="box">
-  <tr>
-    <th>Name</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+<div id="signup" style="display:none;">
+  <%= simple_form_for(Page.new) do |f| %>
+    <div class="form-inputs">
+      <%= f.input :name, :class => "text ui-widget-content ui-corner-all" %>
+    </div>
 
-<% @pages.each do |page| %>
-  <tr>
-    <td><%= page.name %></td>
-    <td><%= link_to 'Add Content', project_page_path(@project, page), :class => "button" %></td>
-    <td><%= link_to 'Edit', edit_project_page_path(@project, page), :class => "button" %></td>
-    <td><%= link_to 'Destroy', project_page_path(@project, page), method: :delete, data: { confirm: 'Are you sure?' } , :class => "button" %></td>
-  </tr>
-<% end %>
-</table>
+    <div class="form-actions">
+      <%= f.button :submit %>
+    </div>
+  <% end %>
+</div>
 
+<div>
+  <span>
+    <%= link_to image_tag('default.png'), 'javascript:void(0);', :onclick => "javascript:$( '#signup' ).dialog( 'open' )"%>
+  </span>
+</div>
+<br/>
+<br/>
+<h1>My Apps</h1>
+<div id="canvas">
+  <% @pages.each do |page| %>
+  <span>
+    <%= link_to '-----', page_path(page), method: :delete, data: { confirm: 'Are you sure?' } , :style => 'position: relative; top:-72px; left:212px;background-image: url(/assets/delete.png);' %>
+    <script type="text/javascript">
+      wsr_snapshot('<%= page_url(page) %>', 'M79FaWp0Rm35', 's');
+    </script>
+  <span>
+  <% end %>
+</div>
 <br />
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#canvas a').each(function() {
+      $(this).attr('onmousedown', '');
+      $(this).attr('target', '');
+    })
+  });  
 
-<%= link_to 'New Page', new_project_page_path, :class => "button" %>
-<%= link_to 'Projects', projects_path, :class => "button" %>
+  $( "#signup" ).dialog({
+    autoOpen: false,
+    height: 300,
+    width: 350,
+    modal: true,
+    buttons: {
+      close: function() {
+        allFields.val( "" ).removeClass( "ui-state-error" );
+      }
+    }
+  });
+
+  
+</script>

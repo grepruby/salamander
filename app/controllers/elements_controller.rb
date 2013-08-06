@@ -3,9 +3,7 @@ class ElementsController < ApplicationController
   protect_from_forgery :except => [:create_element, :destroy_each]
 
   def create_element
-    #debugger
-    project = current_user.projects.find(params[:project_id])
-    page = project.pages.find(params[:page_id])
+    page = current_user.pages.find(params[:id])
     @element = page.elements.new(:name => params[:type])
     if @element.save!
       params[:pop].each_pair do |key, value|
@@ -23,8 +21,7 @@ class ElementsController < ApplicationController
   end
 
   def destroy_each
-    project = current_user.projects.find(params[:project_id])
-    page = project.pages.find(params[:page_id])
+    page = current_user.pages.find(params[:id])
     page.elements.destroy_all
     render :nothing => true, :status => 200
   end

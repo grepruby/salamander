@@ -11,7 +11,6 @@
 <link href="/css/jquery.mCustomScrollbar.css" rel="stylesheet" />
 <script type="text/javascript" src="/js/parameter.js"></script>
 <script type="text/javascript" src="/js/scriptnode.js"></script>	 
-
 <!--<script type="text/javascript" src="/js/script.js"></script>	-->
 
 </head>
@@ -281,7 +280,7 @@
           $.ajax({
             type: "POST",
             beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-            url: "<%= create_element_path(@project, @page) %>",
+            url: "<%= create_element_path(@page) %>",
             dataType: 'json',
             data: { type: "panel", pop: panelData.panel[i], parent: parent}
           }).error(function(XMLHttpRequest, textStatus, errorThrown) {
@@ -302,7 +301,7 @@
           $.ajax({
             type: "POST",
             beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-            url: "<%= create_element_path(@project, @page) %>",
+            url: "<%= create_element_path(@page) %>",
             dataType: 'json',
             data: { type: "textbox", pop: textboxData.textbox[j], parent: parent}
           }).error(function(XMLHttpRequest, textStatus, errorThrown) { 
@@ -322,7 +321,7 @@
       if ((panelData.panel.length > 0) || (textboxData.textbox.length > 0)){
         $.ajax({
             type: "POST",
-            url: "<%= destroy_each_path(@project, @page) %>",
+            url: "<%= destroy_each_path(@page) %>",
           }).error(function(XMLHttpRequest, textStatus, errorThrown) { 
             return false;
           }).success(function(response) {
@@ -341,7 +340,7 @@
 
     function redirect_to_list(){
       if (textDone && panelDone){
-        window.location = "<%= project_pages_path(@project) %>"
+        window.location = "<%= pages_path %>"
       } else{
         setTimeout(redirect_to_list, 200);
         return false;
