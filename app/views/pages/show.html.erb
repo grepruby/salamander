@@ -275,7 +275,6 @@
     function savedata(){
       if(panelData.panel.length > 0){
         for( i = 0 ; i < panelData.panel.length; i++){
-          alert($('#drag'+i).html());
           parent = panelData.panel[i].parent[0].outerHTML;
           delete panelData.panel[i].parent;
           $.ajax({
@@ -297,7 +296,6 @@
 
       if(textboxData.textbox.length > 0){
         for( j = 0 ; j < textboxData.textbox.length; j++){
-          alert($('#tdrag'+i).html());
           parent = textboxData.textbox[j].parent[0].outerHTML;
           delete textboxData.textbox[j].parent;
           $.ajax({
