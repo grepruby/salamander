@@ -1,0 +1,34 @@
+<%= form_for(@element) do |element_form| %>
+
+  <div class="field">
+    <%= element_form.label :name %>
+    <%= element_form.text_field :name %>
+  </div>
+  <div class="field">
+    <%= element_form.label :header_js %>
+    <%= element_form.text_field :header_js %>
+  </div>
+  <div class="field">
+    <%= element_form.label :footer_js %>
+    <%= element_form.text_field :footer_js %>
+  </div>
+  <div class="field">
+    <%= element_form.label :content_box_html %>
+    <%= element_form.text_field :content_box_html %>
+  </div>
+  <div class="field">
+    <%= element_form.label :html %>
+    <%= element_form.text_field :html %>
+  </div>
+    <div class="field">
+    <%= element_form.label :on_content_change %>
+    <%= element_form.text_field :on_content_change %>
+  </div>
+
+  <h2>Properties</h2>
+  <%= render :partial => 'properties_form',
+             :locals => {:form => element_form} %>
+  <div class="actions">
+    <%= element_form.submit %>
+  </div>
+<% end %>

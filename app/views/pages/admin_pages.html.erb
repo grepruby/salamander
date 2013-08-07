@@ -1,0 +1,29 @@
+<h3>Pages</h3>
+<div class="span8">
+<table class="table table-condensed">
+  <thead>
+    <tr>
+      <th>User Name</th>
+      <th>App Name</th>
+      <th>Creation Time</th>
+      <th>User Role</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+  <% @pages.each do |page| %>
+    <tr>
+      <td><%= page.user.name %></td>
+      <td><%= page.name %></td>
+      <td><%= page.created_at.to_date %></td>
+      <td><%= page.user.roles.first.name.titleize unless page.user.roles.first.nil? %></td>
+      <td>
+        <%= link_to("Change Content", element_list_path(page), :class => 'btn btn-mini')%>
+      </td>
+      <td><%= link_to("Delete Page", page_path(page), :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-mini')%></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+</div>

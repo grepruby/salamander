@@ -65,11 +65,20 @@ class PagesController < ApplicationController
   # DELETE /pages/1
   # DELETE /pages/1.json
   def destroy
-    @page = current_user.pages.find(params[:id])
+    @page = current_user.has_role?('admin') ?  Page.find(params[:id]) : current_user.pages.find(params[:id])
     @page.destroy
-
+    send_url = current_user.has_role?('admin') ? admin_pages_url : pages_url
     respond_to do |format|
-      format.html { redirect_to pages_url, notice: 'Page was successfully deleted.' }
+      format.html { redirect_to send_url, notice: 'Page was successfully deleted.' }
     end
+  end
+
+  def admin_pages
+    @pages = Page.all if current_user.has_role? :admin
+  end
+
+  def element_list
+    @page = Page.find(params[:id])
+    @elements = @page.elements
   end
 end

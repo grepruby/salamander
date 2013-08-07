@@ -1,0 +1,7 @@
+<% @element.properties.build %>
+<%= form.fields_for :properties do |properties_form| %>
+  <div class="field">
+    <%= properties_form.text_field :name, :readonly => true, :style => "border-style:none; width:110px;" %>
+    <%= properties_form.text_field :value %>
+  </div>
+<% end %>
